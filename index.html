@@ -915,6 +915,7 @@ function validate(){
   err.textContent='';return true;
 }
 function nextStep(){
+  _unlockAudio(); // タップのたびにアンロック試行
   if(!validate())return;
   if(step===SAVE_AFTER)doAutoSave();
   if(step<STEPS.length-1){step++;applyStep();}
@@ -1128,6 +1129,25 @@ function backToInput(){
 function closeAlert(){document.getElementById('alertOverlay').classList.remove('show');}
 function closeSetComplete(){
   document.getElementById('setCompleteOverlay').classList.remove('show');
+  // OKタップ時に全音声を事前ロード（スマホのAutoPlay制限を解除）
+  _unlockAllSounds();
+}
+function _unlockAllSounds(){
+  var keys=['setComplete','start','finish','min1','min5','countdown51'];
+  var unlockNext=function(i){
+    if(i>=keys.length)return;
+    var a=new Audio();
+    a.src=SOUNDS[keys[i]];
+    a.volume=0;
+    a.play().then(function(){
+      a.pause();
+      a.src='';
+      unlockNext(i+1);
+    }).catch(function(){
+      unlockNext(i+1);
+    });
+  };
+  unlockNext(0);
 }
 function closeModal(id){document.getElementById(id).classList.remove('show');}
 function openForgot(){
