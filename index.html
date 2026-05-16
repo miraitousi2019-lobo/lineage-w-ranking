@@ -173,6 +173,16 @@ input:disabled,select:disabled{cursor:not-allowed;}
 <!-- カスタムアラート（非表示・使わない） -->
 <div class="alert-overlay" id="alertOverlay" style="display:none!important;"></div>
 
+<!-- Chrome推奨バナー -->
+<div id="browserBanner" style="background:#1a2a00;border:2px solid #8aba6a;border-radius:10px;padding:.75rem 1rem;margin-bottom:.75rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+  <span style="font-size:20px;">🌐</span>
+  <div style="flex:1;">
+    <div style="font-size:13px;font-weight:700;color:#8aba6a;">Chrome ブラウザ推奨！</div>
+    <div style="font-size:12px;color:#a08850;margin-top:2px;">LINEから開いている場合は右上の「…」→「ブラウザで開く」を選ぶと音声が出ます🎵</div>
+  </div>
+  <button onclick="document.getElementById('browserBanner').style.display='none'" style="background:none;border:1px solid #5a4a2a;border-radius:6px;padding:4px 10px;color:#a08850;font-size:12px;cursor:pointer;">閉じる</button>
+</div>
+
 <!-- 常時表示タイマー -->
 <div class="timer-display waiting" id="timerDisplay">
   <div class="timer-time" id="timerTime">--:--</div>
@@ -358,6 +368,14 @@ input:disabled,select:disabled{cursor:not-allowed;}
 <div class="overlay" id="helpModal">
   <div class="modal" style="max-width:540px;">
     <h3>&#10067; はじめての方へ &#8212; 個人用セットアップ手順</h3>
+    <div style="background:#1a2a00;border:1.5px solid #8aba6a;border-radius:10px;padding:.75rem 1rem;margin-bottom:1rem;">
+      <div style="font-size:13px;font-weight:700;color:#8aba6a;margin-bottom:4px;">🌐 ブラウザについて</div>
+      <div style="font-size:12px;color:#a08850;line-height:1.8;">
+        このアプリは <strong style="color:#8aba6a;">Chrome ブラウザ推奨</strong> です！<br>
+        LINEからアクセスする場合は<strong style="color:#c9a84c;">右上の「…」→「ブラウザで開く」</strong>を選んでください。<br>
+        LINEブラウザでは音声が出ない場合があります🔇
+      </div>
+    </div>
     <p style="color:#c9a84c;font-size:12px;margin-bottom:1rem;">※ このアプリを自分だけのスプレッドシートで使いたい方向けです。チームで使う場合は管理者にURLをもらってください。</p>
 
     <div id="helpSteps">
@@ -867,7 +885,17 @@ function applyStep(){
       // OKボタンで閉じる方式（自動クローズなし）
     }
   }
-  setTimeout(function(){try{document.getElementById(STEPS[step].vid).focus();}catch(e){}},60);
+  setTimeout(function(){
+    try{
+      var el=document.getElementById(STEPS[step].vid);
+      el.focus();
+      // 入力欄が画面上部に来るようスクロール（次へボタンが隠れないよう）
+      var rect=el.getBoundingClientRect();
+      var scrollTop=window.pageYOffset||document.documentElement.scrollTop;
+      var targetY=scrollTop+rect.top-120;
+      window.scrollTo({top:Math.max(0,targetY),behavior:'smooth'});
+    }catch(e){}
+  },150);
 }
 function updateSv3(){
   var v=document.getElementById('sv3').value.trim();
