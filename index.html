@@ -890,7 +890,7 @@ function validate(){
   var err=document.getElementById('errMsg');
   if(s.opt||s.type==='select')return true;
   if(!v){err.textContent='値を入力してください';return false;}
-  i  if(s.vid==='sv3'){
+  if(s.vid==='sv3'){
     // 4桁入力 → HH:MM変換
     var t=v.replace(/[^0-9]/g,'');
     if(t.length===3)t='0'+t;
@@ -899,7 +899,6 @@ function validate(){
     if(hh>23||mm>59){err.textContent='正しい時刻を入力してください（例: 2030）';return false;}
     document.getElementById('sv3').value=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');
   }
-}
   if(s.vid==='sv6'){
     var a=parseFloat(document.getElementById('sv5').value);
     var b=parseFloat(v);
