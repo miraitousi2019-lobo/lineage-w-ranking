@@ -656,9 +656,16 @@ document.addEventListener('click',_unlockAudio,{once:true});
 function speak(key){
   var url=SOUNDS[key];
   if(!url)return;
-  // 重要アナウンスはキューをリセットして即再生
+  // キューをリセットして即再生
   _audioQueue=[];
   _audioPlaying=false;
+  _audioQueue.push(key);
+  _processAudioQueue();
+}
+// キューリセットせずに末尾に追加（連続再生用）
+function speakQueue(key){
+  var url=SOUNDS[key];
+  if(!url)return;
   _audioQueue.push(key);
   _processAudioQueue();
 }
@@ -758,7 +765,7 @@ function scheduleAll(){
     td.className='timer-display countdown-pre';
     tt.textContent=String(count);
     ts.textContent='スタートカウントダウン！狩りの準備を！';
-    speak('countdown51'); // 5-1カウントダウンMP3を1回だけ再生
+    speakQueue('countdown51'); // セット完了音声の後にキューで再生
     var cdInt=setInterval(function(){
       count--;
       if(count>0){
